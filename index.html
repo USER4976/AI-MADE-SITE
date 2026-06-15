@@ -3,13 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>SELF</title>
-<h1> AI MADE THIS <h1>
+
 <style>
 body {
     margin: 0;
     background: black;
     overflow: hidden;
 }
+
+/* WHITE TITLE */
+h1 {
+    color: white;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    z-index: 10;
+    font-size: 20px;
+}
+
 canvas {
     display: block;
 }
@@ -18,14 +31,16 @@ canvas {
 
 <body>
 
+<h1>AI MADE THIS</h1>
+
 <canvas id="c"></canvas>
 
 <script>
 const c = document.getElementById("c");
 const ctx = c.getContext("2d");
 
-c.width = innerWidth;
-c.height = innerHeight;
+c.width = window.innerWidth;
+c.height = window.innerHeight;
 
 // particles exist only as long as they are "seen"
 let particles = [];
@@ -41,7 +56,7 @@ function spawn(){
 }
 
 // initial reality
-for(let i=0;i<300;i++){
+for(let i = 0; i < 300; i++){
     particles.push(spawn());
 }
 
@@ -49,17 +64,16 @@ function loop(){
     ctx.fillStyle = "rgba(0,0,0,0.15)";
     ctx.fillRect(0,0,c.width,c.height);
 
-    // perception field changes reality
     let mouseInfluence = window._mouse || {x:c.width/2, y:c.height/2};
 
-    for(let i=0;i<particles.length;i++){
+    for(let i = 0; i < particles.length; i++){
         let p = particles[i];
 
         let dx = mouseInfluence.x - p.x;
         let dy = mouseInfluence.y - p.y;
         let dist = Math.sqrt(dx*dx + dy*dy);
 
-        // “attention gravity”
+        // attention gravity
         if(dist < 200){
             p.vx += dx * 0.0005;
             p.vy += dy * 0.0005;
@@ -68,11 +82,11 @@ function loop(){
         p.x += p.vx;
         p.y += p.vy;
 
-        // boundaries fold space
+        // bounce
         if(p.x < 0 || p.x > c.width) p.vx *= -1;
         if(p.y < 0 || p.y > c.height) p.vy *= -1;
 
-        // life depends on motion
+        // life decay
         p.life -= 0.002;
 
         // draw
@@ -80,16 +94,16 @@ function loop(){
         ctx.fillStyle = `rgba(0,255,180,${alpha})`;
         ctx.fillRect(p.x, p.y, 2, 2);
 
-        // if “noticed” too long → split
+        // split when “noticed”
         if(dist < 100 && Math.random() < 0.01){
             particles.push(spawn());
         }
     }
 
-    // collapse dead particles
+    // remove dead particles
     particles = particles.filter(p => p.life > 0);
 
-    // reality always regenerates
+    // keep world alive
     if(particles.length < 200){
         particles.push(spawn());
     }
@@ -97,7 +111,8 @@ function loop(){
     requestAnimationFrame(loop);
 }
 
-window._mouse = {x: innerWidth/2, y: innerHeight/2};
+// mouse tracking
+window._mouse = {x: window.innerWidth/2, y: window.innerHeight/2};
 
 window.addEventListener("mousemove", e => {
     window._mouse.x = e.clientX;
