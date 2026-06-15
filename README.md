@@ -1,2 +1,2 @@
 # AI-MADE-SITE
-PLEASE READ "README"
+it ment to be this "A real-time canvas simulation of autonomous particles driven by simple rules of motion, decay, and regeneration. Each particle responds to proximity-based “attention gravity,” creating emergent behavior from minimal code. The system runs continuously with no goal, representing a self-sustaining digital ecosystem built from interaction, entropy, and feedback loops."
